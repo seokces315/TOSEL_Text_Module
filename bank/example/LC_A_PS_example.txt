@@ -1,19 +1,19 @@
-1. Passage: She wears a hat.
-Question: 
+1. Passage:
+Question: She wears a hat.
 Option A: a girl wearing a hat
 Option B: a girl wearing a coat
 Option C: a girl wearing a scarf
 Option D: a girl wearing a dress
 
-2. Passage: I can see a flower.
-Question: 
+2. Passage:
+Question: I can see a flower.
 Option A: a tulip
 Option B: a tree
 Option C: a butterfly
 Option D: a bee
 
-3. Passage: My brother is a police officer.
-Question: 
+3. Passage:
+Question: My brother is a police officer.
 Option A: a police officer
 Option B: a doctor
 Option C: a chef

@@ -1,19 +1,19 @@
-1. Passage: The boy is dancing.
-Question: 
+1. Passage:
+Question: The boy is dancing.
 Option A: a boy dancing
 Option B: a boy painting a picture
 Option C: a boy playing basketball
 Option D: a boy doing martial arts 
 
-2. Passage: The bicycle is broken.
-Question: 
+2. Passage:
+Question: The bicycle is broken.
 Option A: a broken bicycle
 Option B: a broken pencil
 Option C: a broken glasses
 Option D: a broken electric pot
 
-3. Passage: The old man wears a hat.
-Question: 
+3. Passage:
+Question: The old man wears a hat.
 Option A: an old man wearing a hat
 Option B: a young woman wearing a hat
 Option C: an old woman wearing a hat

@@ -39,7 +39,7 @@ class ParsingTemplateManager:
         - Always preserve the full schema structure. The keys "materials", "ask", and "choices" must appear even when their arrays or objects are empty.
         
         - Mapping:
-        * materials[].text : All remaining context not used in ask or choices (e.g., passage, dialouge, summary).
+        * materials[].text : All remaining context not used in ask or choices (e.g., passage, dialouge, summary). Ignore labels such as "passage:", "dialouge:", "summary:" or numbering.
         * ask.text : The actual question text only. Ignore labels such as "Question:", "Q", or numbering.
         * choices[].text : Each answer option, removing only the label markers (A., B., C., D., etc.).
 
@@ -51,7 +51,7 @@ class ParsingTemplateManager:
 
         Return ONLY the final JSON array.
         """
-        
+
         return template
 
 
