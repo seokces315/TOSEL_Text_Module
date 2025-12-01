@@ -48,7 +48,7 @@ def main(args):
     )  # 생성된 문항, chain
 
     result = complete_chain.invoke({"output": output})
-    print("result", result["text"])
+    print("result\n", result["text"])
 
     item_list = build_objects_from_schema(result=result["text"])
 

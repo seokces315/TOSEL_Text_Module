@@ -23,23 +23,32 @@ class ParsingTemplateManager:
             }}
             ]
 
-            Rules:
-            - Output ONLY a valid JSON array (no extra text).
-            - Do NOT invent/modify content.
-            - Use double quotes; use \\n for line breaks.
-            - Omit any key if its content is missing or empty.
-            - Multiple questions → multiple objects.
+            Rules (strict):
+            - Output ONLY a valid JSON array (no extra text or explanations).
+            - Do NOT invent, modify, infer, or reorder any content.
+            - Use double quotes for all strings and \\n for line breaks.
+            - Preserve the full schema structure at all times.
+            "ask", "choices", and "materials" must always appear, even if empty.
+
+            - For every "text" field:
+            * If the original content is missing, label-only, or contains no meaningful text
+                (i.e., only punctuation, whitespace, numbering, or headings),
+                then keep the key but set its value to an empty string: "text": "".
+            * Never delete the key or its parent object.
+
             - Mapping:
-            * ask.text  ← question text (from "Question:", etc.)
-            * choices[].text ← options (A./B./C./D., remove labels)
-            * materials[].text ← remaining context (dialogue, passage, summary, etc.)
+            * ask.text ← actual question text (ignore labels such as "Question:", "Q:", etc.).
+            * choices[].text ← each answer option, removing only label markers like A./B./C./D.
+            * materials[].text ← all remaining context (e.g., passage, dialogue, summary) not used in ask or choices.
+
+            - Multiple questions → multiple objects.
 
             <Raw Input>
             {output}
             </Raw Input>
 
             Return ONLY the final JSON array.
-        """
+            """
         return template
 
 
