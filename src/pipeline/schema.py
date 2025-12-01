@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Any, Optional
+from typing import List, Dict, Any, Optional
 
 
 # Pydantic class for Data Schema
@@ -9,25 +9,26 @@ class Content(BaseModel):
 
 
 class Material(BaseModel):
-    content: Content
     index: int
+    content: Content
 
 
 class Ask(BaseModel):
     type: str = "T"
-    text: str = ""
+    text: str
 
 
 class Choice(BaseModel):
-    content: Content
     index: int
+    content: Content
     isCorrect: bool
 
 
 class Item(BaseModel):
     materials: List[Material]
-    ask: Optional[Ask]
+    ask: Ask
     choices: List[Choice]
-    tags: List[Any] = Field(default_factory=list)
+    tags: List[Dict[str, Any]] = Field(default_factory=list)
     difficulty: Optional[int] = None
-    accuracy: Optional[int] = None
+    predictedAccuracy: Optional[int] = None
+    createdUserId: Optional[int] = None

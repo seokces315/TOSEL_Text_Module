@@ -8,13 +8,9 @@ def parse_args():
 
     parser.add_argument("--comprehension_type", default="LC", type=str)
     parser.add_argument("--problem_type", default="A", type=str)
-    parser.add_argument("--level", default="ADV", type=str, help="Difficulty level")
+    parser.add_argument("--level", default="CO", type=str, help="Difficulty level")
 
     parser.add_argument("--model_id", default="gpt-4o", type=str, help="Model type")
-    parser.add_argument("--generation_template_type", default="xml", type=str)
-    parser.add_argument(
-        "--parsing_template_type", default="seokc", type=str, help="Test"
-    )
 
     args = parser.parse_args()
 

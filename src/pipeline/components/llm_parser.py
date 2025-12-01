@@ -6,49 +6,52 @@ from langchain_core.output_parsers import JsonOutputParser
 
 class ParsingTemplateManager:
     # Initializer
-    def __init__(self, parsing_template_type):
-        self.parsing_template_type = parsing_template_type
+    def __init__(self):
+        pass
 
     # Template Getter
     def get_parsing_template(self):
         template = """
-            You are an assistant that converts raw English test text into a valid JSON array.
+        You are a parser that transforms raw English test text into a strict JSON array.
 
-            Schema per question:
-            [
+        Schema per question:
+        [
             {{
+                "materials": [
+                    {{ "text": "string" }},
+                    ...
+                ],
                 "ask": {{ "text": "string" }},
-                "choices": [ {{ "text": "string" }}, {{ "text": "string" }}, ... ],
-                "materials": [ {{ "text": "string" }}, {{ "text": "string" }}, ... ]
+                "choices": [
+                    {{ "text": "string" }},
+                    {{ "text": "string" }},
+                    {{ "text": "string" }},
+                    ...
+                ]
             }}
-            ]
+        ]
 
-            Rules (strict):
-            - Output ONLY a valid JSON array (no extra text or explanations).
-            - Do NOT invent, modify, infer, or reorder any content.
-            - Use double quotes for all strings and \\n for line breaks.
-            - Preserve the full schema structure at all times.
-            "ask", "choices", and "materials" must always appear, even if empty.
+        Rules (STRICT):
+        - Output ONLY a valid JSON array (no extra text of any kind).
+        - Do NOT invent, modify, infer, or paraphrase any content.
+        - Keep the original order of all text segements without rearranging.
+        - Use double quotes for all strings and \\n for line breaks exactly as shown.
+        - Always preserve the full schema structure. The keys "materials", "ask", and "choices" must appear even when their arrays or objects are empty.
+        
+        - Mapping:
+        * materials[].text : All remaining context not used in ask or choices (e.g., passage, dialouge, summary). Ignore labels such as "passage:", "dialouge:", "summary:" or numbering.
+        * ask.text : The actual question text only. Ignore labels such as "Question:", "Q", or numbering.
+        * choices[].text : Each answer option, removing only the label markers (A., B., C., D., etc.).
 
-            - For every "text" field:
-            * If the original content is missing, label-only, or contains no meaningful text
-                (i.e., only punctuation, whitespace, numbering, or headings),
-                then keep the key but set its value to an empty string: "text": "".
-            * Never delete the key or its parent object.
+        * Multiple questions -> Multiple JSON objects in the array.
 
-            - Mapping:
-            * ask.text ← actual question text (ignore labels such as "Question:", "Q:", etc.).
-            * choices[].text ← each answer option, removing only label markers like A./B./C./D.
-            * materials[].text ← all remaining context (e.g., passage, dialogue, summary) not used in ask or choices.
+        <Raw Input>
+        {output}
+        </Raw Input>
 
-            - Multiple questions → multiple objects.
+        Return ONLY the final JSON array.
+        """
 
-            <Raw Input>
-            {output}
-            </Raw Input>
-
-            Return ONLY the final JSON array.
-            """
         return template
 
 
@@ -66,11 +69,9 @@ def generate_llm_parser(chain_config):
 
 
 # Function to define prompt template
-def define_parsing_prompt(parsing_template_type):
+def define_parsing_prompt():
     # Define a question generation template using TemplateManager
-    parsing_template_manager = ParsingTemplateManager(
-        parsing_template_type=parsing_template_type
-    )
+    parsing_template_manager = ParsingTemplateManager()
     parsing_template = parsing_template_manager.get_parsing_template()
 
     # Create a PromptTemplate object
@@ -82,11 +83,11 @@ def define_parsing_prompt(parsing_template_type):
 
 
 # Function to build LLM parser chain
-def build_parsing_chain(chain_config, parsing_template_type):
+def build_parsing_chain(chain_config):
     # Get LLM parser
     llm_parser = generate_llm_parser(chain_config)
     # Get prompt template
-    parsing_prompt = define_parsing_prompt(parsing_template_type)
+    parsing_prompt = define_parsing_prompt()
 
     # Build LLM parser chain
     output_parser = JsonOutputParser()

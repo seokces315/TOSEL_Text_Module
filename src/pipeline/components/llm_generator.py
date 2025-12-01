@@ -6,55 +6,32 @@ from langchain.chains import LLMChain
 # Manage multiple prompt templates for item generation
 class GenerationTemplateManager:
     # Initializer
-    def __init__(self, generation_template_type):
-        self.generation_template_type = generation_template_type
+    def __init__(self):
+        pass
 
     # Template Getter
     def get_generation_template(self, prompt, example):
-        if self.generation_template_type == "xml":
-            template = f"""
-            <Role>
-            You are an expert English test item writer.
-            </Role>
-
-            <Guideline>
-            {prompt}
-            </Guideline>
-
-            <Example>
-            Use the following examples only as a reference for structure and format.
-            Do not copy or adapt their wording or ideas.
-            {example}
-            </Example>
-
-            <Output Format>
-            Write plain text without any headings, categories, or special symbols.
-            Keep only the necessary passage/question and answer option labels.
-            Generate new items following the Example's structure, including Passage/Question and Options.
-            </Output Format>
-            """
-        else:
-            template = f"""
-            [Role]
-            You are an expert English test item writer.
-            [/Role]
-
-            [Guideline]
-            {prompt}
-            [/Guideline]
-
-            [Example]
-            Use the following examples only as a reference for structure and format.
-            Do not copy or adapt their wording or ideas.
-            {example}
-            [/Example]
-
-            [Output Format]
-            Write plain text without any headings, categories, or special symbols.
-            Keep only the necessary passage/question and answer option labels.
-            Generate new items following the Example's structure, including Passage/Question and Options.
-            [/Output Format]            
-            """
+        template = f"""
+        <Role>
+        You are an expert English test item writer.
+        </Role>
+        
+        <Guideline>
+        {prompt}
+        </Guideline>
+        
+        <Example>
+        Use the following examples only as a reference for structure and format.
+        Do not copy or adapt their wording or ideas.
+        {example}
+        </Example>
+        
+        <Output Format>
+        Write plain text without any headings, categories, or special symbols.
+        Keep only the necessary passage/question and answer option labels.
+        Generate new items following the Example's structure, including Passage/Question and Options.
+        </Output Format>
+        """
 
         return template
 
@@ -73,11 +50,9 @@ def generate_llm_generator(chain_config):
 
 
 # Function to define prompt template
-def define_generation_prompt(generation_template_type, prompt, example):
+def define_generation_prompt(prompt, example):
     # Define a question generation template using TemplateManager
-    generation_template_manager = GenerationTemplateManager(
-        generation_template_type=generation_template_type
-    )
+    generation_template_manager = GenerationTemplateManager()
     generation_template = generation_template_manager.get_generation_template(
         prompt=prompt, example=example
     )
@@ -89,13 +64,11 @@ def define_generation_prompt(generation_template_type, prompt, example):
 
 
 # Function to build LLM generator chain
-def build_generator_chain(chain_config, generation_template_type, prompt, example):
+def build_generator_chain(chain_config, prompt, example):
     # Get LLM generator
     llm_generator = generate_llm_generator(chain_config)
     # Get prompt template
-    generation_prompt = define_generation_prompt(
-        generation_template_type, prompt, example
-    )
+    generation_prompt = define_generation_prompt(prompt, example)
 
     # Build LLM generator chain
     generator_chain = LLMChain(llm=llm_generator, prompt=generation_prompt)

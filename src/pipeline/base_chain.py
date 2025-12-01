@@ -5,64 +5,52 @@ from .schema import Content, Material, Ask, Choice, Item
 
 
 # Function to build the complete LLM pipeline (Generator + Parser)
-def build_complete_chain(
-    chain_config,
-    generation_template_type,
-    prompt,
-    example,
-    parsing_template_type,
-):
+def build_complete_chain(chain_config, prompt, example):
     # Get LLM generator chain - 1st chain
-    generator_chain = build_generator_chain(
-        chain_config, generation_template_type, prompt, example
-    )
+    generator_chain = build_generator_chain(chain_config, prompt, example)
 
     # Execute the generator chain to generate a response
     items = generator_chain.invoke({})
     items_text = items.get("text")
-    print("items_text", items_text)
 
     # Get LLM parser chain - 2nd chain
-    parser_chain = build_parsing_chain(chain_config, parsing_template_type)
+    parser_chain = build_parsing_chain(chain_config)
 
     return items_text, parser_chain
 
 
-# Function to dynamically build a list of objects based on the provied schema definition
-def build_objects_from_schema(result):
+# Function to dynamically build a list of objects based on the provided schema definition
+def build_objects_from_schema(results):
     # Create a list to store item objects
     item_list = list()
 
-    # For loop
-    for res in result:
+    # Iterate through each result item and initialize containers for parsing
+    for result in results:
         materials = []
-        ask = None
 
         # Generate materials
-        if res.get("materials"):
-            materials = [
-                Material(content=Content(text=mat["content"]["text"]), index=j)
-                for j, mat in enumerate(res["materials"])
-            ]
+        materials = [
+            Material(index=idx, content=Content(text=material["text"]))
+            for idx, material in enumerate(result["materials"])
+        ]
 
         # Generate ask
-        if res.get("ask"):
-            ask = Ask(text=res["ask"]["text"])
+        ask = Ask(text=result["ask"]["text"])
 
         # Generate choices
         choices = [
             Choice(
-                content=Content(text=choice["content"]["text"]),
-                index=j,
-                isCorrect=(j == 0),
+                index=idx,
+                content=Content(text=choice["text"]),
+                isCorrect=(idx == 0),
             )
-            for j, choice in enumerate(res["choices"])
+            for idx, choice in enumerate(result["choices"])
         ]
 
-        # Build Item
+        # Build item
         item = Item(materials=materials, ask=ask, choices=choices)
 
-        # Append the item to the list
+        # Append the parsed item to the result list
         item_list.append(item)
 
     return item_list

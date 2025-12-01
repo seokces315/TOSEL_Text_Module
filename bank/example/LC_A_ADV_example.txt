@@ -1,6 +1,6 @@
 1. W: I think I’m going to get started on the walls and floors as soon as I’ve finished with this stool.
 M: The walls could use a good coat of paint to cover up some of the drill holes from the previous tenant.
-Question1: Describe an image reflecting the situation of the dialogue
+Question: Describe an image reflecting the situation of the dialogue
 Option A: A woman painting a wooden stool in the living room
 Option B: A woman drilling into the wall with a power drill
 Option C: A woman measuring the wall with a ruler

@@ -1,6 +1,6 @@
 1. M: I’m so shocked that Kevin and Anna broke up!
 W: Me too! I thought they would get married.
-Question1: Describe an image reflecting the situation of the dialogue
+Question: Describe an image reflecting the situation of the dialogue
 Option A: a man with a shocked expression
 Option B: a man with a serious expression
 Option C: a man sleeping at his desk

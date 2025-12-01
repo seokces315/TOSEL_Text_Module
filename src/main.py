@@ -35,22 +35,14 @@ def main(args):
 
     # Initialize LLM chain pipeline
     model_id = args.model_id
-    generation_template_type = args.generation_template_type
-    parsing_template_type = args.parsing_template_type
-
     chain_config = ChainConfig(
         generator=GeneratorConfig(model_id=model_id),
         parser=ParserConfig(model_id=model_id),
     )
-
-    output, complete_chain = build_complete_chain(
-        chain_config, generation_template_type, prompt, example, parsing_template_type
-    )  # 생성된 문항, chain
-
+    output, complete_chain = build_complete_chain(chain_config, prompt, example)
     result = complete_chain.invoke({"output": output})
-    print("result\n", result["text"])
 
-    item_list = build_objects_from_schema(result=result["text"])
+    item_list = build_objects_from_schema(results=result["text"])
 
     # Print the final results
     print()
@@ -67,6 +59,7 @@ def main(args):
     print("==============================")
     print()
     print(f"Elapsed time: {elapsed:.2f}초")
+    print()
 
 
 if __name__ == "__main__":
